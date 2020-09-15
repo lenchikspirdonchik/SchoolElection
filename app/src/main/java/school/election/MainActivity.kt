@@ -25,11 +25,11 @@ import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
-    private lateinit var phoneVerificationId:String
-    private lateinit var classes:String
-    private  var name =""
-    private  var surname =""
-    private lateinit var snapName:String
+    private lateinit var phoneVerificationId: String
+    private lateinit var classes: String
+    private var name = ""
+    private var surname = ""
+    private lateinit var snapName: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -55,13 +55,7 @@ class MainActivity : AppCompatActivity() {
             override fun onCancelled(error: DatabaseError) {}
         })
 
-
-
-
-
         mAuth = FirebaseAuth.getInstance()
-
-        mAuth.setLanguageCode("ru")
 
         val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             override fun onVerificationCompleted(p0: PhoneAuthCredential) {
@@ -90,8 +84,8 @@ class MainActivity : AppCompatActivity() {
             classes = spinnerClass.selectedItem.toString()
             name = txtName.text.toString()
             surname = txtSurname.text.toString()
-            if (name.length>1) name = name[0].toUpperCase().toString()
-            if (surname.length>1) surname = surname[0].toUpperCase().toString()
+            if (name.length > 1) name = name[0].toUpperCase().toString()
+            if (surname.length > 1) surname = surname[0].toUpperCase().toString()
             snapName = "-"
             name = "$name$surname"
             if (name.isNotEmpty()) {
@@ -109,6 +103,9 @@ class MainActivity : AppCompatActivity() {
                         ).show()
                         Log.d("auth", "snapname = $snapName")
                         if (checkPhoneIsValid(txtPhone.text.toString()) && (snapName == "0" || snapName == "1" || snapName == "2")) {
+
+                            mAuth.useAppLanguage()
+
                             PhoneAuthProvider.getInstance().verifyPhoneNumber(
                                 txtPhone.text.toString(),
                                 60,
@@ -121,8 +118,7 @@ class MainActivity : AppCompatActivity() {
 
                     override fun onCancelled(error: DatabaseError) {}
                 })
-            }
-            else Toast.makeText(this, "Пожалуйста введите имя", Toast.LENGTH_LONG).show()
+            } else Toast.makeText(this, "Пожалуйста введите имя", Toast.LENGTH_LONG).show()
         }
 
 
@@ -144,12 +140,26 @@ class MainActivity : AppCompatActivity() {
                     Log.d("auth", "signInWithCredential:success")
                     val user = task.result?.user
                     if (user != null) {
-                        Log.d(
-                            "authSuccess", "your class is $classes \n" +
-                                    "your name is $name\n" +
-                                    "your phone is ${user.phoneNumber}\n" +
-                                    "your vote in DB is $snapName"
-                        )
+                        val creationTimestamp = user.metadata?.creationTimestamp
+                        val lastSignInTimestamp = user.metadata?.lastSignInTimestamp
+                        if (creationTimestamp == lastSignInTimestamp) {
+                            Log.d(
+                                "authSuccess", "your class is $classes \n" +
+                                        "your name is $name\n" +
+                                        "your phone is ${user.phoneNumber}\n" +
+                                        "your vote in DB is $snapName"
+                            )
+                            Toast.makeText(this, "Запуск новой активности", Toast.LENGTH_LONG)
+                                .show()
+                        } else {
+                            Toast.makeText(
+                                this,
+                                "Вы не можете войти второй раз!",
+                                Toast.LENGTH_LONG
+                            ).show()
+
+                        }
+
 
                     }
                 } else {
