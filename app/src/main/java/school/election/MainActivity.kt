@@ -33,13 +33,35 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val classesArray = arrayOf("5А", "5Б", "11А")
+        val firebaseDate = FirebaseDatabase.getInstance()
+        val rootReference = firebaseDate.reference
+        val classesReference = rootReference.child("Classes")
+        val classesArray = arrayListOf<String>()
+        classesReference.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val map: Map<String, String> = snapshot.value as Map<String, String>
+                for (i in map.keys) classesArray.add(i)
+
+                val adaptermain: ArrayAdapter<String> =
+                    ArrayAdapter<String>(
+                        this@MainActivity,
+                        R.layout.support_simple_spinner_dropdown_item,
+                        classesArray
+                    )
+                adaptermain.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                spinnerClass.adapter = adaptermain
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
+
+
+
+
+
         mAuth = FirebaseAuth.getInstance()
-        val adaptermain: ArrayAdapter<String> =
-            ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, classesArray)
-        adaptermain.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerClass.adapter = adaptermain
-mAuth.setLanguageCode("ru")
+
+        mAuth.setLanguageCode("ru")
 
         val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             override fun onVerificationCompleted(p0: PhoneAuthCredential) {
@@ -73,11 +95,9 @@ mAuth.setLanguageCode("ru")
             snapName = "-"
             name = "$name$surname"
             if (name.isNotEmpty()) {
-                val firebaseDate = FirebaseDatabase.getInstance()
-                val rootReference = firebaseDate.reference
-                val classesReference = rootReference.child("Classes")
                 val classReference = classesReference.child(classes)
                 val nameReference = classReference.child(name)
+
                 nameReference.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         val buff: String? = snapshot.getValue(String::class.java)
@@ -107,8 +127,11 @@ mAuth.setLanguageCode("ru")
 
 
         btnCode.setOnClickListener {
-            val credential = PhoneAuthProvider.getCredential(phoneVerificationId, txtCode.text.toString())
-            signInWithPhoneAuthCredential(credential);
+            val credential = PhoneAuthProvider.getCredential(
+                phoneVerificationId,
+                txtCode.text.toString()
+            )
+            signInWithPhoneAuthCredential(credential)
         }
 
     }
