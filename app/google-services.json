@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "599153711144",
+    "firebase_url": "https://school-s-election.firebaseio.com",
+    "project_id": "school-s-election",
+    "storage_bucket": "school-s-election.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:599153711144:android:483c8cb94ab816090ffd1d",
+        "android_client_info": {
+          "package_name": "school.election"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "599153711144-rn1c51hfgalki37jlvu2oudv2rthpp19.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXzN49Hwu0RSkBaMp1C9uKxeJ2vuo1BYA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "599153711144-rn1c51hfgalki37jlvu2oudv2rthpp19.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
