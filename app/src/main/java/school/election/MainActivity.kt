@@ -188,6 +188,13 @@ class MainActivity : AppCompatActivity() {
                 startActivity(mintent)
                 return true
             }
+            R.id.nav_statistics -> {
+                val mintent = Intent(this, SettingsActivity::class.java)
+                mintent.putExtra("arrayOfClass", classesArray)
+                startActivity(mintent)
+                return true
+            }
+
             else -> return super.onOptionsItemSelected(item)
         }
     }

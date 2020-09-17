@@ -45,6 +45,10 @@ class SettingsActivity : AppCompatActivity() {
             val classesArray = intent.extras!!.getStringArrayList("arrayOfClass")
             val thread = Thread {
                 Log.d("nullDB", "Start")
+                for (i in 0..2) {
+                    val voteReference = rootReference.child("Vote").child(i.toString())
+                    voteReference.setValue("0")
+                }
                 if (classesArray != null) {
                     for (oneClass in classesArray) {
                         val classReference = classesReference.child(oneClass)

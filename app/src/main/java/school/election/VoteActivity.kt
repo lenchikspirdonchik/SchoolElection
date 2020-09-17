@@ -6,7 +6,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_vote.*
 
 
@@ -33,6 +36,17 @@ class VoteActivity : AppCompatActivity() {
                 val index: Int = radioG.indexOfChild(findViewById(radioG.checkedRadioButtonId))
                 nameReference.setValue(index.toString())
                 mAuth.signOut()
+                val voteReference = rootReference.child("Vote").child(index.toString())
+                voteReference.addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val chet = snapshot.getValue(String::class.java)!!
+                        var chetInt = chet.toInt()
+                        chetInt++
+                        voteReference.setValue(chetInt)
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {}
+                })
 
 
                 val pDialog = SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
