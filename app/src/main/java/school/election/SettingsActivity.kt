@@ -3,6 +3,7 @@ package school.election
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -21,7 +22,9 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
         val mintent: Intent? = Intent(this, LoginActivity::class.java)
         startActivityForResult(mintent, 1)
-
+        val actionBar = supportActionBar
+        actionBar?.setHomeButtonEnabled(true)
+        actionBar?.setDisplayHomeAsUpEnabled(true)
         val firebaseDate = FirebaseDatabase.getInstance()
         val rootReference = firebaseDate.reference
         val classesReference = rootReference.child("Classes")
@@ -83,6 +86,16 @@ class SettingsActivity : AppCompatActivity() {
         }
 
 
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
 }
