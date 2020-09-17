@@ -141,7 +141,7 @@ class MainActivity : AppCompatActivity() {
                     if (user != null) {
                         val creationTimestamp = user.metadata?.creationTimestamp
                         val lastSignInTimestamp = user.metadata?.lastSignInTimestamp
-                        if (creationTimestamp == lastSignInTimestamp) {
+                        if (creationTimestamp != lastSignInTimestamp) {
                             Log.d(
                                 "authSuccess", "your class is $classes \n" +
                                         "your name is $name\n" +

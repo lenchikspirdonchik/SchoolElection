@@ -30,19 +30,22 @@ class VoteActivity : AppCompatActivity() {
             txtHead.text.toString() + realName
 
         btnVote.setOnClickListener {
+
             if (name != null && classes != null && realName != null) {
                 val classReference = classesReference.child(classes)
                 val nameReference = classReference.child(name)
                 val index: Int = radioG.indexOfChild(findViewById(radioG.checkedRadioButtonId))
                 nameReference.setValue(index.toString())
                 mAuth.signOut()
+                var chetInt = 0
                 val voteReference = rootReference.child("Vote").child(index.toString())
                 voteReference.addValueEventListener(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
-                        val chet = snapshot.getValue(String::class.java)!!
-                        var chetInt = chet.toInt()
+                        var chet = snapshot.getValue(String::class.java)
+                        if (chet == null) chet = "0"
+                        chetInt = chet.toInt()
                         chetInt++
-                        voteReference.setValue(chetInt)
+
                     }
 
                     override fun onCancelled(error: DatabaseError) {}
@@ -50,12 +53,13 @@ class VoteActivity : AppCompatActivity() {
 
 
                 val pDialog = SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
-                pDialog.progressHelper.barColor = Color.parseColor("#A5DC86")
+                pDialog.progressHelper.barColor = Color.parseColor("#264599")
                 pDialog.titleText = "Вы успешно проголосовали"
                 pDialog.contentText = "Ваш голос важен для нас!"
                 pDialog.confirmText = "Готово"
                 pDialog.setCancelable(false)
                 pDialog.setConfirmClickListener {
+                    voteReference.setValue(chetInt.toString())
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                 }
