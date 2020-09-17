@@ -1,7 +1,9 @@
 package school.election
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.DataSnapshot
@@ -17,7 +19,8 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-
+        val mintent: Intent? = Intent(this, LoginActivity::class.java)
+        startActivityForResult(mintent, 1)
 
         val firebaseDate = FirebaseDatabase.getInstance()
         val rootReference = firebaseDate.reference
@@ -66,4 +69,16 @@ class SettingsActivity : AppCompatActivity() {
 
         }
     }
+
+    override
+
+    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK) {
+            linSettings.visibility = View.VISIBLE
+        }
+
+
+    }
+
 }
