@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var classes: String
     private var name = ""
     private var surname = ""
-    private lateinit var snapName: String
+    private lateinit var snap: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
             surname = txtSurname.text.toString()
             if (name.length > 1) name = name[0].toUpperCase().toString()
             if (surname.length > 1) surname = surname[0].toUpperCase().toString()
-            snapName = "-"
+            snap = "-"
             name = "$name$surname"
             if (name.isNotEmpty()) {
                 val classReference = classesReference.child(classes)
@@ -94,14 +94,14 @@ class MainActivity : AppCompatActivity() {
                 nameReference.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         val buff: String? = snapshot.getValue(String::class.java)
-                        if (buff != null) snapName = snapshot.getValue(String::class.java)!!
+                        if (buff != null) snap = snapshot.getValue(String::class.java)!!
                         else Toast.makeText(
                             applicationContext,
                             "Данного пользователя не найдено",
                             Toast.LENGTH_LONG
                         ).show()
-                        Log.d("auth", "snapname = $snapName")
-                        if (checkPhoneIsValid(txtPhone.text.toString()) && (snapName == "0" || snapName == "1" || snapName == "2")) {
+                        Log.d("auth", "snapname = $snap")
+                        if (checkPhoneIsValid(txtPhone.text.toString()) && (snap == "0" || snap == "1" || snap == "2")) {
 
                             mAuth.useAppLanguage()
 
@@ -141,15 +141,20 @@ class MainActivity : AppCompatActivity() {
                     if (user != null) {
                         val creationTimestamp = user.metadata?.creationTimestamp
                         val lastSignInTimestamp = user.metadata?.lastSignInTimestamp
-                        if (creationTimestamp == lastSignInTimestamp) {
+                        if (creationTimestamp != lastSignInTimestamp) {
                             Log.d(
                                 "authSuccess", "your class is $classes \n" +
                                         "your name is $name\n" +
                                         "your phone is ${user.phoneNumber}\n" +
-                                        "your vote in DB is $snapName"
+                                        "your vote in DB is $snap"
                             )
-                            Toast.makeText(this, "Запуск новой активности", Toast.LENGTH_LONG)
-                                .show()
+                            val intent = Intent(this, VoteActivity::class.java)
+                            intent.putExtra("name", name)
+                            intent.putExtra("classes", classes)
+                            val realName =
+                                txtName.text.toString() + " " + txtSurname.text.toString()
+                            intent.putExtra("realName", realName)
+                            startActivity(intent)
                         } else {
                             Toast.makeText(
                                 this,
