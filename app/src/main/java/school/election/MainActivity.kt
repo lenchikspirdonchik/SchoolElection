@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var phoneVerificationId: String
     private lateinit var classes: String
+    private val classesArray: ArrayList<String> = arrayListOf<String>()
     private var name = ""
     private var surname = ""
     private lateinit var snap: String
@@ -35,7 +36,6 @@ class MainActivity : AppCompatActivity() {
         val firebaseDate = FirebaseDatabase.getInstance()
         val rootReference = firebaseDate.reference
         val classesReference = rootReference.child("Classes")
-        val classesArray = arrayListOf<String>()
         classesReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val map: Map<String, String> = snapshot.value as Map<String, String>
@@ -141,7 +141,7 @@ class MainActivity : AppCompatActivity() {
                     if (user != null) {
                         val creationTimestamp = user.metadata?.creationTimestamp
                         val lastSignInTimestamp = user.metadata?.lastSignInTimestamp
-                        if (creationTimestamp != lastSignInTimestamp) {
+                        if (creationTimestamp == lastSignInTimestamp) {
                             Log.d(
                                 "authSuccess", "your class is $classes \n" +
                                         "your name is $name\n" +
@@ -184,6 +184,7 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.nav_settings -> {
                 val mintent = Intent(this, SettingsActivity::class.java)
+                mintent.putExtra("arrayOfClass", classesArray)
                 startActivity(mintent)
                 return true
             }
