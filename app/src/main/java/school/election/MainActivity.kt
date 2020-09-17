@@ -189,8 +189,7 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
             R.id.nav_statistics -> {
-                val mintent = Intent(this, SettingsActivity::class.java)
-                mintent.putExtra("arrayOfClass", classesArray)
+                val mintent = Intent(this, StatisticsActivity::class.java)
                 startActivity(mintent)
                 return true
             }
