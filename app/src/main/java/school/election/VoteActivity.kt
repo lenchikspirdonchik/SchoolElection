@@ -62,6 +62,7 @@ class VoteActivity : AppCompatActivity() {
                     voteReference.setValue(chetInt.toString())
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
+                    finish()
                 }
                 pDialog.progressHelper.spin()
                 pDialog.show()
