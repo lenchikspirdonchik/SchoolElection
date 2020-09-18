@@ -6,7 +6,10 @@
         android:id="@+id/nav_statistics"
         android:title="Статистика"
         app:showAsAction="always" />
-
+    <item
+        android:id="@+id/nav_about"
+        android:title="О программе"
+        app:showAsAction="never" />
     <item
         android:id="@+id/nav_settings"
         android:title="Настройки"

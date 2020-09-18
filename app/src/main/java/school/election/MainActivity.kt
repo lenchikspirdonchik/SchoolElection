@@ -34,9 +34,21 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        mAuth = FirebaseAuth.getInstance()
         val firebaseDate = FirebaseDatabase.getInstance()
         val rootReference = firebaseDate.reference
         val classesReference = rootReference.child("Classes")
+        val passReference = rootReference.child("istrue")
+
+        passReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val isTrue = snapshot.getValue(String::class.java)
+                if (isTrue.equals("1")) btnStart.isEnabled = true
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
+
         classesReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val map: Map<String, String> = snapshot.value as Map<String, String>
@@ -55,7 +67,6 @@ class MainActivity : AppCompatActivity() {
             override fun onCancelled(error: DatabaseError) {}
         })
 
-        mAuth = FirebaseAuth.getInstance()
 
         val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             override fun onVerificationCompleted(p0: PhoneAuthCredential) {
@@ -98,7 +109,7 @@ class MainActivity : AppCompatActivity() {
                         if (buff != null) snap = snapshot.getValue(String::class.java)!!
                         else {
                             val pDialog =
-                                SweetAlertDialog(applicationContext, SweetAlertDialog.WARNING_TYPE)
+                                SweetAlertDialog(this@MainActivity, SweetAlertDialog.WARNING_TYPE)
                             pDialog.progressHelper.barColor = Color.parseColor("#264599")
                             pDialog.progressHelper.rimColor = Color.parseColor("#264599")
                             pDialog.titleText = "Ошибка"
@@ -116,7 +127,7 @@ class MainActivity : AppCompatActivity() {
                             pDialog.progressHelper.barColor = Color.parseColor("#264599")
                             pDialog.progressHelper.rimColor = Color.parseColor("#264599")
                             pDialog.titleText = "Ошибка"
-                            pDialog.contentText = "Вы уже голосовали!"
+                            pDialog.contentText = "Вы уже голосовали или ввели неправильные данные"
                             pDialog.confirmText = "Хорошо"
                             pDialog.setCancelable(false)
                             pDialog.show()
@@ -135,7 +146,7 @@ class MainActivity : AppCompatActivity() {
                     override fun onCancelled(error: DatabaseError) {}
                 })
             } else {
-                val pDialog = SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                val pDialog = SweetAlertDialog(this@MainActivity, SweetAlertDialog.WARNING_TYPE)
                 pDialog.progressHelper.barColor = Color.parseColor("#264599")
                 pDialog.progressHelper.rimColor = Color.parseColor("#264599")
                 pDialog.titleText = "Ошибка"
@@ -222,7 +233,11 @@ class MainActivity : AppCompatActivity() {
                 startActivity(mintent)
                 return true
             }
-
+            R.id.nav_about -> {
+                val mintent = Intent(this, AboutActivity::class.java)
+                startActivity(mintent)
+                return true
+            }
             else -> return super.onOptionsItemSelected(item)
         }
     }

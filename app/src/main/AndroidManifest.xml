@@ -12,10 +12,26 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat"
         tools:replace="android:icon">
-        <activity android:name=".StatisticsActivity"></activity>
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".VoteActivity" />
-        <activity android:name=".SettingsActivity" />
+        <activity
+            android:name=".AboutActivity"
+            android:label="О программе" />
+
+        <activity
+            android:name=".StatisticsActivity"
+            android:label="Статистика выборов" />
+
+        <activity
+            android:name=".LoginActivity"
+            android:label="Вход" />
+
+        <activity
+            android:name=".VoteActivity"
+            android:label="Голосование" />
+
+        <activity
+            android:name=".SettingsActivity"
+            android:label="Настройки" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
