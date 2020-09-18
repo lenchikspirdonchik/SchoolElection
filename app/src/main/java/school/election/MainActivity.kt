@@ -1,14 +1,15 @@
 package school.election
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
@@ -90,20 +91,36 @@ class MainActivity : AppCompatActivity() {
             if (name.isNotEmpty()) {
                 val classReference = classesReference.child(classes)
                 val nameReference = classReference.child(name)
-
+                val isMany = ValidateStudent().validateStudent(classes, name)
                 nameReference.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         val buff: String? = snapshot.getValue(String::class.java)
                         if (buff != null) snap = snapshot.getValue(String::class.java)!!
-                        else Toast.makeText(
-                            applicationContext,
-                            "Данного пользователя не найдено",
-                            Toast.LENGTH_LONG
-                        ).show()
-                        Log.d("auth", "snapname = $snap")
-                        if (checkPhoneIsValid(txtPhone.text.toString()) && (snap == "0" || snap == "1" || snap == "2")) {
+                        else {
+                            val pDialog =
+                                SweetAlertDialog(applicationContext, SweetAlertDialog.WARNING_TYPE)
+                            pDialog.progressHelper.barColor = Color.parseColor("#264599")
+                            pDialog.progressHelper.rimColor = Color.parseColor("#264599")
+                            pDialog.titleText = "Ошибка"
+                            pDialog.contentText = "Данного пользователя не найдено"
+                            pDialog.confirmText = "Хорошо"
+                            pDialog.setCancelable(false)
+                            pDialog.show()
+                            Log.d("auth", "snapname = $snap")
+                        }
 
-                            mAuth.useAppLanguage()
+
+                        if (!isMany && snap != "0") {
+                            val pDialog =
+                                SweetAlertDialog(this@MainActivity, SweetAlertDialog.ERROR_TYPE)
+                            pDialog.progressHelper.barColor = Color.parseColor("#264599")
+                            pDialog.progressHelper.rimColor = Color.parseColor("#264599")
+                            pDialog.titleText = "Ошибка"
+                            pDialog.contentText = "Вы уже голосовали!"
+                            pDialog.confirmText = "Хорошо"
+                            pDialog.setCancelable(false)
+                            pDialog.show()
+                        } else if (checkPhoneIsValid(txtPhone.text.toString())) {
 
                             PhoneAuthProvider.getInstance().verifyPhoneNumber(
                                 txtPhone.text.toString(),
@@ -117,7 +134,16 @@ class MainActivity : AppCompatActivity() {
 
                     override fun onCancelled(error: DatabaseError) {}
                 })
-            } else Toast.makeText(this, "Пожалуйста введите имя", Toast.LENGTH_LONG).show()
+            } else {
+                val pDialog = SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                pDialog.progressHelper.barColor = Color.parseColor("#264599")
+                pDialog.progressHelper.rimColor = Color.parseColor("#264599")
+                pDialog.titleText = "Ошибка"
+                pDialog.contentText = "Пожалуйста введите имя!"
+                pDialog.confirmText = "Хорошо"
+                pDialog.setCancelable(false)
+                pDialog.show()
+            }
         }
 
 
@@ -155,13 +181,16 @@ class MainActivity : AppCompatActivity() {
                                 txtName.text.toString() + " " + txtSurname.text.toString()
                             intent.putExtra("realName", realName)
                             startActivity(intent)
+                            finish()
                         } else {
-                            Toast.makeText(
-                                this,
-                                "Вы не можете войти второй раз!",
-                                Toast.LENGTH_LONG
-                            ).show()
-
+                            val pDialog = SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                            pDialog.progressHelper.barColor = Color.parseColor("#264599")
+                            pDialog.progressHelper.rimColor = Color.parseColor("#264599")
+                            pDialog.titleText = "Ошибка"
+                            pDialog.contentText = "Вы не можете войти второй раз!"
+                            pDialog.confirmText = "Хорошо"
+                            pDialog.setCancelable(false)
+                            pDialog.show()
                         }
 
 

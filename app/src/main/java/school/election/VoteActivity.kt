@@ -34,7 +34,8 @@ class VoteActivity : AppCompatActivity() {
             if (name != null && classes != null && realName != null) {
                 val classReference = classesReference.child(classes)
                 val nameReference = classReference.child(name)
-                val index: Int = radioG.indexOfChild(findViewById(radioG.checkedRadioButtonId))
+                var index: Int = radioG.indexOfChild(findViewById(radioG.checkedRadioButtonId))
+                index++
                 nameReference.setValue(index.toString())
                 mAuth.signOut()
                 var chetInt = 0
@@ -57,6 +58,7 @@ class VoteActivity : AppCompatActivity() {
                 pDialog.titleText = "Вы успешно проголосовали"
                 pDialog.contentText = "Ваш голос важен для нас!"
                 pDialog.confirmText = "Готово"
+                pDialog.progressHelper.rimColor = Color.parseColor("#264599")
                 pDialog.setCancelable(false)
                 pDialog.setConfirmClickListener {
                     voteReference.setValue(chetInt.toString())

@@ -22,17 +22,12 @@ class StatisticsActivity : AppCompatActivity() {
             "#FE6DA8",
             "#56B7F1",
             "#CDA67F",
-            "#FED70E",
-            "#45D09E",
-            "#00848C",
-            "#41B619",
-            "#8EAF0C",
-            "#FFD600"
+            "#FED70E"
         )
         val firebaseDate = FirebaseDatabase.getInstance()
         val rootReference = firebaseDate.reference
-        val vote = arrayOf("За Mac", "За собак", "За кошек")
-        for (i in 0..vote.lastIndex) {
+        val vote = arrayOf("", "За Mac", "За собак", "За кошек")
+        for (i in 1..vote.lastIndex) {
             val voteReference = rootReference.child("Vote").child(i.toString())
             voteReference.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
