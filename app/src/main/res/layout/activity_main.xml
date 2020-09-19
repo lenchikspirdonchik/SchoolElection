@@ -22,11 +22,11 @@
             android:id="@+id/txtPhone"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.6"
-            android:ems="10"
-            android:hint="Введите Ваш номер телефона"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
+            android:layout_weight="0.6"
+            android:ems="10"
+            android:hint="Введите Ваш номер телефона (с +7)"
             android:inputType="phone" />
 
         <Space

@@ -132,7 +132,6 @@ class MainActivity : AppCompatActivity() {
                             pDialog.setCancelable(false)
                             pDialog.show()
                         } else if (checkPhoneIsValid(txtPhone.text.toString())) {
-
                             PhoneAuthProvider.getInstance().verifyPhoneNumber(
                                 txtPhone.text.toString(),
                                 60,
@@ -140,6 +139,7 @@ class MainActivity : AppCompatActivity() {
                                 this@MainActivity,
                                 callbacks
                             )
+                            btnStart.isEnabled = false
                         }
                     }
 
@@ -159,7 +159,8 @@ class MainActivity : AppCompatActivity() {
 
 
         btnCode.setOnClickListener {
-            val credential = PhoneAuthProvider.getCredential(
+
+        val credential = PhoneAuthProvider.getCredential(
                 phoneVerificationId,
                 txtCode.text.toString()
             )
